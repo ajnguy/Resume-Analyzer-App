@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Resume Analyzer</h1>
+    
+    <h2>Upload Resume Here!</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="file">Choose a PDF file:</label>
+        <input type="file" name="file" id="file" accept="application/pdf" required>
+        <br><br>
+        <button type="submit">Upload</button>
+    </form>
+
+    <script>
+    // Define the function to handle the PDF preview
+    function showSelectedPDF() {
+        console.log("Function triggered");
+        const selectedResume = document.getElementById('resume').value;
+        if (selectedResume) {
+            const pdfUrl = "{{ url_for('uploaded_file', filename='') }}" + selectedResume;
+            console.log('PDF URL:', pdfUrl); // Check the URL in the console
+            document.getElementById('pdf-preview').src = pdfUrl;
+            document.getElementById('pdf-preview-container').style.display = 'block';
+        }
+    }
+
+    // Attach the event listener after the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const resumeSelect = document.getElementById('resume');
+        resumeSelect.addEventListener('change', showSelectedPDF);
+    });
+    </script>
+
+    <h2>Resume & Job Description</h2>
+    <form method="POST">
+        <div class="form-container">
+            <!-- Resume Selection Section -->
+            <div class="form-section">
+                <h3>Select a Resume</h3>
+                <label for="resume">Choose a resume:</label>
+                <select name="resume" id="resume" required>
+                    <option value="" disabled selected>Select your resume</option>
+                    {% for resume in resumes %}
+                        <option value="{{ resume }}">{{ resume }}</option>
+                    {% endfor %}
+                </select>
+                <!-- PDF Preview (Hidden until a file is selected) -->
+                <div id="pdf-preview-container" style="display: none; margin-top: 20px;">
+                    <h3>PDF Preview</h3>
+                    <iframe id="pdf-preview" style="width: 50%; height: 300px; border: 1px solid #ddd;"></iframe>
+                </div>
+            </div>
+
+            <!-- Job Description Section -->
+            <div class="form-section">
+                <h3>Job Description</h3>
+                <label for="job_description">Enter Job Description:</label>
+                <textarea name="job_description" id="job_description" rows="5" placeholder="Enter the job description here..."></textarea>
+            </div>
+        </div>
+        
+        <br>
+        <button type="submit">Analyze</button>
+    </form>
+
+    <h2>Similarity Scores</h2>
+    <h3>Cosine Similarity</h3>
+    <div class="progress-container">
+        <div class="progress-bar" id="cosine-progress" role="progressbar">
+            {{ cosine_similarity }}%
+        </div>
+    </div>
+    <h3>Semantic Similarity</h3>
+    <div class="progress-container">
+        <div class="progress-bar" id="semantic-progress" role="progressbar">
+            {{ semantic_similarity }}%
+        </div>
+    </div>
+    <h3>Boosted Semantic Similarity</h3>
+    <div class="progress-container">
+        <div class="progress-bar" id="boosted-semantic-progress" role="progressbar">
+            {{ boosted_semantic_similarity }}%
+        </div>
+    </div>
+    
+    <div>
+        <h2>Missing Keywords</h2>
+        <ul>
+            {% for keyword in missing_keywords %}
+                <li>{{ keyword }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div>
+        <h2>Resume Fit</h2>
+        <p>Your Resume is {{ resume_class }}</p>
+        <div class="progress-container">
+            <div class="progress-bar" id="resume-fit-progress" role="progressbar">
+                {{ resume_fit_score }}%
+            </div>
+        </div>
+    </div>
+
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <script>
+        // Auto-hide flash messages after 3 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.flash-message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }, 3000);
+    </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Cosine Similarity Progress Bar
+        let cosineProgressBar = document.getElementById("cosine-progress");
+        let cosineScore = parseFloat("{{ cosine_similarity|default(0) }}") * 100;
+        cosineProgressBar.style.width = cosineScore + "%";
+        cosineProgressBar.textContent = cosineScore.toFixed(2) + "%";
+
+        // Semantic Similarity Progress Bar
+        let semanticProgressBar = document.getElementById("semantic-progress");
+        let semanticScore = parseFloat("{{ semantic_similarity|default(0) }}") * 100;
+        semanticProgressBar.style.width = semanticScore + "%";
+        semanticProgressBar.textContent = semanticScore.toFixed(2) + "%";
+
+        // Boosted Semantic Similarity Progress Bar
+        let boostedSemanticProgressBar = document.getElementById("boosted-semantic-progress");
+        let boostedSemanticScore = parseFloat("{{ boosted_semantic_similarity|default(0) }}") * 100;
+        boostedSemanticProgressBar.style.width = boostedSemanticScore + "%";
+        boostedSemanticProgressBar.textContent = boostedSemanticScore.toFixed(2) + "%";
+
+        // Resume Fit Progress Bar
+        let resumeFitProgressBar = document.getElementById("resume-fit-progress");
+        let resumeFit = parseFloat("{{ resume_fit_score|default(0) }}") * 100;
+        resumeFitProgressBar.style.width = resumeFit + "%";
+        resumeFitProgressBar.textContent = resumeFit.toFixed(2) + "%";
+    });
+</script>
+
+{% endblock %}
