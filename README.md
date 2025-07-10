@@ -28,21 +28,34 @@ A web-based application built with Flask that allows users to upload their resum
 ## Getting Started
 
 1. Clone the repo:
-```
-bash
+```bash
 git clone https://github.com/ajnguy/Resume-Analyzer-App.git
 cd Resume-Analyzer-App
 ```
-3. Set up virtual environment
+2. Set up virtual environment
+- **Windows**  
+```bash
+python -m venv venv
+venv\Scripts\activate
 ```
+- **macOS / Linux**   
+```bash
 python3 -m venv venv
 source venv/bin/activate
+```
+3. Install all packages  
+```bash
 pip install -r requirements.txt
 ```
-5. Run Flask
+3. Install language model
+```bash
+python -m spacy download en_core_web_sm
 ```
+4. Run Flask
+```bash
 flask run
 ```
+5. Navigate to generated link
 
 ## Using the App
 - Upload your resume to be stored locally
