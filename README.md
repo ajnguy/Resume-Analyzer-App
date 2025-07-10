@@ -33,12 +33,12 @@ git clone https://github.com/ajnguy/Resume-Analyzer-App.git
 cd Resume-Analyzer-App
 ```
 2. Set up virtual environment
-- **Windows**  
+- Windows 
 ```bash
 python -m venv venv
 venv\Scripts\activate
 ```
-- **macOS / Linux**   
+- macOS / Linux 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
