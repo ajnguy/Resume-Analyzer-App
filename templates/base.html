@@ -1,19 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Flask App{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <title>{% block title %}Resume Analyzer{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/main.css') }}" />
+    <noscript><link rel="stylesheet" href="{{ url_for('static', filename='assets/css/noscript.css') }}" /></noscript>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/styles.css') }}" />
 </head>
-<body>
-    <nav>
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('sample') }}">Sample</a>
-    </nav>
-
-    <div>
-        {% block content %}{% endblock %}
+<body class="is-preload">
+    <div id="page-wrapper">
+        <header id="header" class="alt">
+            <nav>
+                <a href="#menu">Menu</a>
+            </nav>
+        </header>
+        <nav id="menu">
+            <div class="inner">
+                <h2>Menu</h2>
+                <ul class="links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('info') }}">Info</a></li>
+                    <li><a href="#">Log In</a></li>
+                    <li><a href="#">Sign Up</a></li>
+                </ul>
+                <a href="#" class="close">Close</a>
+            </div>
+        </nav>
+        <div id="main">
+            {% block content %}{% endblock %}
+        </div>
     </div>
+    <script src="{{ url_for('static', filename='assets/js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/jquery.scrollex.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/browser.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/breakpoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/util.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/js/main.js') }}"></script>
+    <script>
+        window.addEventListener("beforeunload", function() {
+        sessionStorage.setItem("scrollPos", window.scrollY);
+        });
+        window.addEventListener("load", function() {
+        const scrollPos = sessionStorage.getItem("scrollPos");
+        if (scrollPos) {
+            window.scrollTo(0, parseInt(scrollPos));
+            sessionStorage.removeItem("scrollPos");
+        }
+        });
+    </script>
 </body>
 </html>

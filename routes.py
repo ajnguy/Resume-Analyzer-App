@@ -14,8 +14,8 @@ def home():
     boosted_semantic_similarity = 0
     missing_keywords = []
     
-    resume_class = ""
-    resume_fit_score = None
+    resume_class = "_______"
+    resume_fit_score = 0
     
     if request.method == 'POST':
         if 'file' in request.files:  # Handle file upload
@@ -72,15 +72,6 @@ def uploaded_file(filename):
     uploads_dir = os.path.join(app.root_path, 'uploads')
     return send_from_directory(uploads_dir, filename)
 
-@app.route('/sample', methods=["GET", "POST"])
-def sample():
-    return render_template('index.html')
-
-
-@app.route('/samplegeneric', methods=["GET", "POST"])
-def sampleGeneric():
-    return render_template('generic.html')
-
-@app.route('/sampleElements', methods=["GET", "POST"])
-def sampleElements():
-    return render_template('elements.html')
+@app.route('/info', methods=["GET", "POST"])
+def info():
+    return render_template('info.html')
