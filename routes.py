@@ -54,7 +54,7 @@ def home():
         
         
 
-    return render_template('index.html', resumes=resumes, 
+    return render_template('home.html', resumes=resumes, 
                            cosine_similarity=cosine_similarity, 
                            semantic_similarity=semantic_similarity, 
                            boosted_semantic_similarity=boosted_semantic_similarity, 
@@ -72,5 +72,15 @@ def uploaded_file(filename):
     uploads_dir = os.path.join(app.root_path, 'uploads')
     return send_from_directory(uploads_dir, filename)
 
+@app.route('/sample', methods=["GET", "POST"])
+def sample():
+    return render_template('index.html')
 
 
+@app.route('/samplegeneric', methods=["GET", "POST"])
+def sampleGeneric():
+    return render_template('generic.html')
+
+@app.route('/sampleElements', methods=["GET", "POST"])
+def sampleElements():
+    return render_template('elements.html')
